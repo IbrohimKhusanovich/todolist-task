@@ -3,6 +3,8 @@ import { CiEdit } from "react-icons/ci";
 import { AiOutlineDelete } from "react-icons/ai";
 import { MdOutlineDone } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
+import axios from "axios";
+import { baseURL } from "../utils/request";
 
 const Task = ({ task, onEditTask, onDeleteTask, onToggleCompleted }) => {
   const [editing, setEditing] = useState(false);
@@ -20,6 +22,7 @@ const Task = ({ task, onEditTask, onDeleteTask, onToggleCompleted }) => {
   const handleDone = () => {
     if (title.trim()) {
       onEditTask(task.id, title.trim());
+      axios.patch(baseURL + task.id + "/", { title: title.trim() });
       setEditing(false);
     }
   };
@@ -27,10 +30,12 @@ const Task = ({ task, onEditTask, onDeleteTask, onToggleCompleted }) => {
   const handleDelete = (e) => {
     e.preventDefault();
     onDeleteTask(task.id);
+    axios.delete(baseURL + task.id + "/");
   };
 
   const handleToggleCompleted = () => {
     onToggleCompleted(task.id);
+    axios.patch(baseURL + task.id + "/", { is_completed: !task.completed });
   };
 
   const handleChange = (e) => {
@@ -54,10 +59,16 @@ const Task = ({ task, onEditTask, onDeleteTask, onToggleCompleted }) => {
           </div>
           <div className=" flex space-x-3">
             <button type="submit">
-              <MdOutlineDone size={20} className=" hover:text-green-400 text-gray-500" />
+              <MdOutlineDone
+                size={20}
+                className=" hover:text-green-400 text-gray-500"
+              />
             </button>
             <button type="button" onClick={handleCancel}>
-              <RxCross2 size={20} className=" text-gray-500 hover:text-orange-400" />
+              <RxCross2
+                size={20}
+                className=" text-gray-500 hover:text-orange-400"
+              />
             </button>
           </div>
         </form>
@@ -66,14 +77,14 @@ const Task = ({ task, onEditTask, onDeleteTask, onToggleCompleted }) => {
           <div className=" flex items-center space-x-3">
             <input
               type="checkbox"
-              checked={task.completed}
+              checked={task.is_completed}
               onChange={handleToggleCompleted}
               className="round rounded-none"
             />
 
             <span
               className={` ${
-                task.completed
+                task.is_completed
                   ? "line-through text-gray-500 text-lg"
                   : "text-lg"
               } `}

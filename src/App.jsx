@@ -2,11 +2,17 @@ import React, { useState, useEffect } from "react";
 import AddTaskForm from "./components/AddTaskForm";
 import TaskList from "./components/TaskList";
 import { MdDarkMode, MdSunny } from "react-icons/md";
+import axios from "axios";
+import { baseURL } from "./utils/request";
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [darkTheme, setDarkTheme] = useState(false);
-
+  useEffect(() => {
+    axios.get(baseURL).then((res) => {
+      setTasks(res.data);
+    });
+  }, []);
   const addTask = (title) => {
     const newTask = { id: Date.now(), title, completed: false };
     setTasks([...tasks, newTask]);
@@ -20,7 +26,7 @@ function App() {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const toggleCompleted = (id) => {
+  const toggleCompleted = (id) => { 
     setTasks(
       tasks.map((task) =>
         task.id === id ? { ...task, completed: !task.completed } : task

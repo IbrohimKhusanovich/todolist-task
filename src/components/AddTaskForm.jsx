@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { CiCirclePlus } from "react-icons/ci";
+import { baseURL } from "../utils/request";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const AddTaskForm = ({ onAddTask, darkTheme }) => {
   const [title, setTitle] = useState("");
@@ -8,6 +11,9 @@ const AddTaskForm = ({ onAddTask, darkTheme }) => {
     e.preventDefault();
     if (title.trim()) {
       onAddTask(title.trim());
+      axios.post(baseURL, { title: title.trim() }).then((res) => {
+        toast.success("Task added");
+      });
       setTitle("");
     }
   };
