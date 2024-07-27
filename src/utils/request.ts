@@ -1,1 +1,1 @@
-export const baseURL = "http://hoka.yutori.uz/";
+export const baseURL = "https://hoka.yutori.uz/";
